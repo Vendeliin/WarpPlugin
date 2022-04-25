@@ -1,0 +1,29 @@
+package me.vendelin.warpplugin.commands;
+
+import me.vendelin.warpplugin.WarpPlugin;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+public class HelpWarp implements CommandExecutor {
+
+    Plugin plugin = WarpPlugin.getPlugin(WarpPlugin.class);
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (!(sender instanceof Player player)) {
+            return true;
+        }
+
+        String names;
+        Integer count = plugin.getConfig().getInt("countofwarps");
+        for (int i = 0; i < count; i++) {
+            names = plugin.getConfig().getStringList("namesofwarps").get(i);
+            player.sendMessage(names);
+        }
+
+        return true;
+    }
+}
