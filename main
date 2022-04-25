@@ -1,0 +1,23 @@
+package me.vendelin.warpplugin;
+
+import me.vendelin.warpplugin.commands.DeleteWarp;
+import me.vendelin.warpplugin.commands.HelpWarp;
+import me.vendelin.warpplugin.commands.SetWarp;
+import me.vendelin.warpplugin.commands.TeleportWarp;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class WarpPlugin extends JavaPlugin {
+
+    @Override
+    public void onEnable() {
+        getConfig().options().copyDefaults();
+        saveDefaultConfig();
+
+        getCommand("warpset").setExecutor(new SetWarp());
+        getCommand("warp").setExecutor(new TeleportWarp());
+        getCommand("warpdelete").setExecutor(new DeleteWarp());
+        getCommand("warphelp").setExecutor(new HelpWarp());
+
+
+    }
+}
