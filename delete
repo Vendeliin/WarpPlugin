@@ -1,0 +1,65 @@
+package me.vendelin.warpplugin.commands;
+
+import me.vendelin.warpplugin.WarpPlugin;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import java.util.List;
+import java.util.Objects;
+
+public class DeleteWarp implements CommandExecutor {
+
+    Plugin plugin = WarpPlugin.getPlugin(WarpPlugin.class);
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (!(sender instanceof Player player)) {
+            return true;
+        }
+
+        String nameWarp = args[0];
+
+        if (Objects.equals(nameWarp, "all")) {
+
+            Integer count = plugin.getConfig().getInt("countofwarps");
+            List<String> list = plugin.getConfig().getStringList("namesofwarps");
+            String a;
+            for (int i = 0; i < count; i++) {
+                a = list.get(i);
+                plugin.getConfig().set(a, null);
+            }
+            list.clear();
+            plugin.getConfig().set("countofwarps", 0);
+            plugin.getConfig().set("namesofwarps", list);
+            player.sendMessage(ChatColor.GREEN + "All warps has been removed");
+            plugin.saveConfig();
+            return true;
+        }
+
+        if (!plugin.getConfig().contains(nameWarp)) {
+            player.sendMessage(ChatColor.RED + "This warp doesn't exist");
+            player.sendMessage(ChatColor.RED + "If you want to show warps names type /warphelp");
+
+            return true;
+        }
+
+
+        Integer count = plugin.getConfig().getInt("countofwarps");
+        List<String> list = plugin.getConfig().getStringList("namesofwarps");
+        list.remove(nameWarp);
+        plugin.getConfig().set("namesofwarps", list);
+        plugin.getConfig().set("countofwarps", count - 1);
+
+
+        plugin.getConfig().set(nameWarp, null);
+        player.sendMessage(ChatColor.GREEN + nameWarp + " warp has been removed.");
+        plugin.saveConfig();
+
+        return true;
+    }
+}
