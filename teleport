@@ -1,0 +1,45 @@
+package me.vendelin.warpplugin.commands;
+
+import me.vendelin.warpplugin.WarpPlugin;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+public class TeleportWarp implements CommandExecutor {
+    Plugin plugin = WarpPlugin.getPlugin(WarpPlugin.class);
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player player)) {
+            return true;
+        }
+        if(args.length == 0) {
+            player.sendMessage(ChatColor.RED + "Warp name has not been provieded.");
+            player.sendMessage(ChatColor.RED + "If you want to show warps names type /warphelp");
+
+            return true;
+        }
+        String nameWarp = args[0];
+
+        if (!plugin.getConfig().contains(nameWarp)) {
+            player.sendMessage(ChatColor.RED + "This warp doesn't exist");
+            player.sendMessage(ChatColor.RED + "If you want to show warps names type /warphelp");
+
+            return true;
+        }
+
+        Location location = plugin.getConfig().getLocation(nameWarp);
+
+
+        player.teleport(location);
+
+        player.sendMessage("You have been teleported to the " + nameWarp + " warp");
+
+
+        return true;
+    }
+}
