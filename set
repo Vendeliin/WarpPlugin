@@ -1,0 +1,44 @@
+package me.vendelin.warpplugin.commands;
+
+import me.vendelin.warpplugin.WarpPlugin;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import java.util.List;
+
+public class SetWarp implements CommandExecutor {
+    Plugin plugin = WarpPlugin.getPlugin(WarpPlugin.class);
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        String nameWarp = args[0];
+        if(!(sender instanceof Player player)) {
+            return true;
+        }
+
+
+       if (plugin.getConfig().contains(nameWarp))  {
+            player.sendMessage("This name of warp already exists");
+            return true;
+       }
+
+        Location location = player.getLocation();
+
+
+        Integer count = plugin.getConfig().getInt("countofwarps");
+        List<String> list = plugin.getConfig().getStringList("namesofwarps");
+        list.add(nameWarp);
+        plugin.getConfig().set("namesofwarps", list);
+        plugin.getConfig().set("countofwarps", count + 1);
+
+        plugin.getConfig().set(nameWarp, location);
+        player.sendMessage(ChatColor.GREEN + nameWarp + " has been succesffully set as a warp");
+        plugin.saveConfig();
+        return true;
+
+    }
+}
